@@ -2,21 +2,31 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
+from pyramid.httpexceptions import (
+    HTTPFound,
+    HTTPNotFound,
+)
 
 from .models import (
     DBSession,
     MyModel,
     SignUpSheet,
-    )
+)
 
 
+# Check for duplicate email addresses
+# Validate emails on the models side
 @view_config(route_name='home', renderer='templates/mytemplate.jinja2')
 def my_view(request):
-    print request.params
+    account_confirmed = "You've successfully signed up. An email has been sent out."
     if 'form.submitted' in request.params:
         email = request.params['email']
         add_email = SignUpSheet(email);
+        check_email = add_email.is_duplicate_email()
+        if check_email:
+            return { 'error': 'Email exists already.'}
         DBSession.add(add_email)
+        return { 'msg': account_confirmed, 'is_confirmed': True}
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:

@@ -22,6 +22,8 @@ requires = [
     'coverage',
     'pylint',
     'pep8',
+    'psycopg2',
+    
     ]
 
 setup(name='fashion_designer',

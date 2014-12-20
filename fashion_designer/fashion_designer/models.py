@@ -38,6 +38,11 @@ class SignUpSheet(Base):
     def __init__(self, email):
         self._email = email
 
+    def is_duplicate_email(self):
+        email_check = DBSession.query(SignUpSheet).filter_by(_email=self._email).first()
+        if email_check:
+            return True
+
 
 class Users(Base):
     __tablename__ = 'users'
