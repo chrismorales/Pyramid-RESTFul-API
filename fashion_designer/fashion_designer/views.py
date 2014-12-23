@@ -11,6 +11,7 @@ from .models import (
     DBSession,
     MyModel,
     SignUpSheet,
+    Users,
 )
 
 
@@ -32,6 +33,20 @@ def my_view(request):
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'fashion_designer'}
+
+
+@view_config(route_name='login', renderer='templates/login.jinja2')
+def login(request):
+    error = 'Invalid Username/Password'
+    if 'form.submitted' in request.params:
+        username = request.params['username']
+        password = request.params['password']
+        user = Users(username, password)
+        if user.username_exists():
+            return HTTPFound(request.route_url('home'))
+        return {'error': error}
+    return {'login': '/login'}
+
 
 @view_config(request_method='GET', renderer='json')
 def getUsers(self):

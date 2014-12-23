@@ -1,3 +1,4 @@
+import bcrypt
 import datetime
 from sqlalchemy import (
     Boolean,
@@ -53,9 +54,34 @@ class Users(Base):
     is_activated = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, username, password, email):
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = generate_password_hash(value)
+
+    def __init__(self, username, password):
         self.username = username
         self._password = password
-        self._email = email
+
+
+    def username_exists(self):
+        user = DBSession.query(Users).filter_by(username=self.username).first()
+        if not user:
+            return False
+        return True
+
+    def check_pswd_hash(self, password):
+        if bcrypt.hashpw(password, hashed) == hashed:
+            return True
+        else:
+            return False
+
+    def generate_password_hash(self, password):
+        hashed = crypt.hashpw(password, bcrypt.gensalt())
+        return hashed
+
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)

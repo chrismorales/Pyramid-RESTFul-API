@@ -15,6 +15,7 @@ from ..models import (
     DBSession,
     MyModel,
     Base,
+    Users,
     )
 
 
@@ -37,4 +38,6 @@ def main(argv=sys.argv):
     Base.metadata.create_all(engine)
     with transaction.manager:
         model = MyModel(name='one', value=1)
+        user = Users('user', 'password', 'user@gmail.com')
         DBSession.add(model)
+        DBSession.add(user)

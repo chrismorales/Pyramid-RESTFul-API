@@ -1,0 +1,17 @@
+{% extends 'mytemplate.jinja2' %}
+{% block signup %}
+<form class="form-signin" role="form" method="POST">
+    <h2 class="form-signin-heading">Sign Up</h2>
+{% if error %}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ error }}
+    </div>
+{% endif %}
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+    <h2 class="spacer"></h2>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" name="form.submitted">Submit</button>
+</form>
+{% endblock %}
