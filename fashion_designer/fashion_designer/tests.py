@@ -10,7 +10,7 @@ class TestMyViewSuccessCondition(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         from sqlalchemy import create_engine
-        engine = create_engine('postgresql://vagrant:who escaped.qpwoei3#@localhost/')
+        engine = create_engine('sqlite://')
         from .models import (
             Base,
             MyModel,

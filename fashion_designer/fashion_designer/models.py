@@ -50,7 +50,7 @@ class Users(Base):
     user_id = Column(Integer, primary_key=True)
     username = Column(String (80))
     _password = Column('password', String(120), unique=True)
-    _email = Column('email', String(80), nullable=False)
+    _email = Column('email', String(80))
     is_activated = Column(Boolean, default=False)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
 

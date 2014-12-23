@@ -23,11 +23,12 @@ requires = [
     'pylint',
     'pep8',
     'psycopg2',
-    
+    'bcrypt',
+    'mock',
     ]
 
 setup(name='fashion_designer',
-      version='0.1',
+      version='0.3',
       description='fashion_designer',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
