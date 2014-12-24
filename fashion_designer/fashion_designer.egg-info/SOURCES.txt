@@ -7,6 +7,7 @@ setup.py
 fashion_designer/__init__.py
 fashion_designer/models.py
 fashion_designer/tests.py
+fashion_designer/validators.py
 fashion_designer/views.py
 fashion_designer.egg-info/PKG-INFO
 fashion_designer.egg-info/SOURCES.txt
@@ -21,4 +22,11 @@ fashion_designer/static/pyramid-16x16.png
 fashion_designer/static/pyramid.png
 fashion_designer/static/theme.css
 fashion_designer/static/theme.min.css
+fashion_designer/static/dist/css/bootstrap-theme.css
+fashion_designer/static/dist/css/bootstrap-theme.min.css
+fashion_designer/static/dist/css/bootstrap.css
+fashion_designer/static/dist/css/bootstrap.min.css
+fashion_designer/static/dist/js/bootstrap.js
+fashion_designer/static/dist/js/bootstrap.min.js
+fashion_designer/static/dist/js/npm.js
 fashion_designer/templates/mytemplate.pt

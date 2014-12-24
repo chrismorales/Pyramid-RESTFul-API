@@ -11,3 +11,6 @@ nose
 coverage
 pylint
 pep8
+psycopg2
+bcrypt
+mock
