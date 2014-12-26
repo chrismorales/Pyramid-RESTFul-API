@@ -56,7 +56,7 @@ class TestModels(unittest.TestCase):
         check = SignUpSheet(email)
         self.assertFalse(check.is_duplicate_email())
 
-    def test_password_is_hashed(self):
+    def test_password_hash_check(self):
         from fashion_designer.models import Users
         username = 'user'
         password = 'password'
@@ -65,5 +65,18 @@ class TestModels(unittest.TestCase):
         pwd_hash = add_user.check_pswd_hash(password)
         self.assertTrue(pwd_hash)
 
+    def test_generate_password_hash(self):
+        from fashion_designer.models import Users
+        username = 'user'
+        password = 'helloworld'
+        add_user = Users(username, password)
+        self.assertNotEqual(password, add_user.password)
 
-
+    def test_get_date_created_is_returned(self):
+        from fashion_designer.models import Users
+        import datetime
+        username = 'user'
+        password = 'helloworld'
+        add_user = Users(username, password)
+        self.session.add(add_user)
+        self.assertIsNotNone(add_user.get_date_created())

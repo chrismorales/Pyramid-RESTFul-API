@@ -84,5 +84,17 @@ class Users(Base):
         hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
         return hashed
 
+    def get_date_created(self):
+        date = DBSession.query(Users).filter_by(username=self.username).first()
+        return date.date_created
+
+class Profile(Base):
+    __tablename__ = 'profile'
+    id = Column(Integer, primary_key=True)
+    age = Column(Integer)
+    sex = Column(String(20))
+    location = Column(String(120))
+    style = Column(String(120))
+    friend_count = Column(Integer)
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
