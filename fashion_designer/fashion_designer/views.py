@@ -61,6 +61,14 @@ def getUsers(self):
                     content_type='text/json',
                     status_int=200)
 
+@view_config(request_method='POST', renderer='json')
+def createProfile(self):
+    field = request.params
+    age = field['age']
+    sex = field['sex']
+    location = field['location']
+    style = field['style']
+    pass
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

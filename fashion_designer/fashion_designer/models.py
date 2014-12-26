@@ -8,6 +8,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    ForeignKey,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,6 +16,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
+    relationship,
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -33,8 +35,10 @@ class MyModel(Base):
 class SignUpSheet(Base):
     __tablename__ = 'signup'
     id = Column(Integer, primary_key=True)
-    _email = Column('email', String(80), nullable=False)
+    status = Column(Boolean, default=True)
     is_signed_up = Column(Boolean, default=True)
+    date_signed_up = Column(DateTime, default=datetime.datetime.utcnow)
+    _email = Column('email', String(80), nullable=False)
 
     def __init__(self, email):
         self._email = email
@@ -49,6 +53,7 @@ class SignUpSheet(Base):
 class Users(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
+    status = Column(Boolean, default=True)
     username = Column(String (80))
     _password = Column('password', String(120), unique=True)
     _email = Column('email', String(80))
@@ -88,13 +93,35 @@ class Users(Base):
         date = DBSession.query(Users).filter_by(username=self.username).first()
         return date.date_created
 
+
 class Profile(Base):
     __tablename__ = 'profile'
     id = Column(Integer, primary_key=True)
+    status = Column(Boolean, default=True)
+    date_created = Column(DateTime, default=datetime.datetime.utcnow)
     age = Column(Integer)
     sex = Column(String(20))
     location = Column(String(120))
     style = Column(String(120))
     friend_count = Column(Integer)
+
+
+class Friend(Base):
+    __tablename__ = 'friend'
+    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    friend_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    request_status = Column(Boolean)
+    user = relationship('Users', foreign_keys='Friend.user_id')
+    friend = relationship('Users', foreign_keys='Friend.friend_id')
+
+
+class Messages(Base):
+    __tablename__ = 'message'
+    id = Column(Integer, primary_key=True)
+    created_by = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    date_created = Column(DateTime, default=datetime.datetime.utcnow)
+    status = Column(Boolean, default=True)
+    msg = Column(String(120))
+
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
