@@ -75,13 +75,14 @@ class Users(Base):
         return True
 
     def check_pswd_hash(self, password):
-        if bcrypt.hashpw(password, hashed) == hashed:
+        hashed = DBSession.query(Users).filter_by(username=self.username).first()
+        if bcrypt.hashpw(password, hashed._password) == hashed_password:
             return True
         else:
             return False
 
     def generate_password_hash(self, password):
-        hashed = crypt.hashpw(password, bcrypt.gensalt())
+        hashed = crypt.hashpw(password, bcrypt.gensalt(10))
         return hashed
 
 
