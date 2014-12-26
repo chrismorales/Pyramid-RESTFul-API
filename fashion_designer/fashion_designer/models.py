@@ -61,12 +61,11 @@ class Users(Base):
 
     @password.setter
     def password(self, value):
-        self._password = generate_password_hash(value)
+        self._password = self.generate_password_hash(value)
 
     def __init__(self, username, password):
         self.username = username
-        self._password = password
-
+        self.password = password
 
     def username_exists(self):
         user = DBSession.query(Users).filter_by(username=self.username).first()
@@ -76,13 +75,13 @@ class Users(Base):
 
     def check_pswd_hash(self, password):
         hashed = DBSession.query(Users).filter_by(username=self.username).first()
-        if bcrypt.hashpw(password, hashed._password) == hashed_password:
+        if bcrypt.hashpw(password, hashed._password) == hashed._password:
             return True
         else:
             return False
 
     def generate_password_hash(self, password):
-        hashed = crypt.hashpw(password, bcrypt.gensalt(10))
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
         return hashed
 
 

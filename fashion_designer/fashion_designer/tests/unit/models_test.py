@@ -63,7 +63,7 @@ class TestModels(unittest.TestCase):
         add_user = Users(username, password)
         self.session.add(add_user)
         pwd_hash = add_user.check_pswd_hash(password)
-        print pwd_hash
+        self.assertTrue(pwd_hash)
 
 
 
