@@ -19,15 +19,6 @@ from .models import (
 # Validate emails on the models side
 @view_config(route_name='home', renderer='templates/mytemplate.jinja2')
 def my_view(request):
-    account_confirmed = "You've successfully signed up. An email has been sent out."
-    if 'form.submitted' in request.params:
-        email = request.params['email']
-        add_email = SignUpSheet(email);
-        check_email = add_email.is_duplicate_email()
-        if check_email:
-            return { 'error': 'Email exists already.'}
-        DBSession.add(add_email)
-        return { 'msg': account_confirmed, 'is_confirmed': True}
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:
@@ -50,15 +41,16 @@ def login(request):
 
 @view_config(route_name='signup', renderer='templates/signup.jinja2')
 def signup(request):
+    account_confirmed = "You've successfully signed up. An email has been sent out."
     error = 'An account with that email is already registered!'
     if 'form.submitted' in request.params:
         email = request.params['email']
         signee = SignUpSheet(email)
         if signee.is_duplicate_email():
             return {'error': error}
-        else:
-            DBSession.add(signee)
-            return HTTPFound(request.route_url('login'))
+        DBSession.add(signee)
+        request.session.flash(account_confirmed, 'is_confirmed')
+        return HTTPFound(location=request.route_url('login'))
     return {'signup': '/signup'}
 
 

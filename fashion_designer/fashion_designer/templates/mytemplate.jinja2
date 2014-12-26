@@ -36,7 +36,7 @@
     <![endif]-->
   </head>
 
-  <body {% if is_confirmed %} onload="launch_modal();" {% endif %}>
+  <body {% if request.session.peek_flash('is_confirmed')  %} onload="launch_modal();" {% endif %}>
     <div class="starter-template">
       <div class="container">
         {% include "confirm_modal.jinja2" %}
