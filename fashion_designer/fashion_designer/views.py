@@ -48,6 +48,20 @@ def login(request):
     return {'login': '/login'}
 
 
+@view_config(route_name='signup', renderer='templates/signup.jinja2')
+def signup(request):
+    error = 'An account with that email is already registered!'
+    if 'form.submitted' in request.params:
+        email = request.params['email']
+        signee = SignUpSheet(email)
+        if signee.is_duplicate_email():
+            return {'error': error}
+        else:
+            DBSession.add(signee)
+            return HTTPFound(request.route_url('login'))
+    return {'signup': '/signup'}
+
+
 @view_config(request_method='GET', renderer='json')
 def getUsers(self):
     count = DBSession.query(SignUpSheet).count()

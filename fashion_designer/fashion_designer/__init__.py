@@ -24,4 +24,5 @@ def add_routes(config):
     config.add_route('home', '/')
     config.add_route('login', '/login')
     config.add_route('signup', '/signup')
+    config.add_route('profile', '/profile/{id}')
     config.scan()

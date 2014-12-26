@@ -43,6 +43,7 @@ class SignUpSheet(Base):
         email_check = DBSession.query(SignUpSheet).filter_by(_email=self._email).first()
         if email_check:
             return True
+        return False
 
 
 class Users(Base):
