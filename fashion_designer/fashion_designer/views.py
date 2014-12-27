@@ -1,10 +1,10 @@
+import json
 from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 from pyramid.httpexceptions import (
     HTTPFound,
-    HTTPNotFound,
 )
 
 from .models import (
@@ -12,6 +12,7 @@ from .models import (
     MyModel,
     SignUpSheet,
     Users,
+    Profile,
 )
 
 
@@ -41,7 +42,8 @@ def login(request):
 
 @view_config(route_name='signup', renderer='templates/signup.jinja2')
 def signup(request):
-    account_confirmed = "You've successfully signed up. An email has been sent out."
+    account_confirmed = "You've successfully signed up. \
+                         An email has been sent out."
     error = 'An account with that email is already registered!'
     if 'form.submitted' in request.params:
         email = request.params['email']
@@ -54,21 +56,39 @@ def signup(request):
     return {'signup': '/signup'}
 
 
-@view_config(request_method='GET', renderer='json')
-def getUsers(self):
+@view_config(request_method='GET', route_name='getusers', renderer='json')
+def getUsers(request):
     count = DBSession.query(SignUpSheet).count()
-    return Response(count,
-                    content_type='text/json',
-                    status_int=200)
+    return Response(
+        body=json.dumps({'getUsers': count},
+                        status='200 OK',
+                        content_type='application/json'))
 
-@view_config(request_method='POST', renderer='json')
-def createProfile(self):
-    field = request.params
-    age = field['age']
-    sex = field['sex']
-    location = field['location']
-    style = field['style']
-    pass
+
+@view_config(request_method='POST', route_name='createprofile', renderer='json')
+def createProfile(request):
+    try:
+        profile = Profile(age=request.params['age'],
+                          sex=request.params['sex'],
+                          location=request.params['location'],
+                          style=request.params['style'])
+        DBSession.add(profile)
+    except:
+        raise 'SQLALCHEMY ERROR'
+    return Response(
+        body=json.dumps({'createProfile': 'creating...'},
+                        status='201 Created',
+                        content_type='application/json'))
+
+
+@view_config(request_method='GET', route_name='getprofile', renderer='json')
+def getProfile(request):
+    username = request.session('username')
+    user_info = DBSession.query(Profile).filter_by(username=username).first()
+    return Response(
+        body=json.dumps({'getProfile': user_info},
+                        status='200 OK',
+                        content_type='application/json'))
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
@@ -85,4 +105,3 @@ might be caused by one of the following things:
 After you fix the problem, please restart the Pyramid application to
 try it again.
 """
-

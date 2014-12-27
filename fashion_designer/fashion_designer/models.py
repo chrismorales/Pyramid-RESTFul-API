@@ -44,7 +44,8 @@ class SignUpSheet(Base):
         self._email = email
 
     def is_duplicate_email(self):
-        email_check = DBSession.query(SignUpSheet).filter_by(_email=self._email).first()
+        email_check = DBSession.query(SignUpSheet).filter_by(
+            _email=self._email).first()
         if email_check:
             return True
         return False
@@ -54,7 +55,7 @@ class Users(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
     status = Column(Boolean, default=True)
-    username = Column(String (80))
+    username = Column(String(80))
     _password = Column('password', String(120), unique=True)
     _email = Column('email', String(80))
     is_activated = Column(Boolean, default=False)
@@ -79,7 +80,8 @@ class Users(Base):
         return True
 
     def check_pswd_hash(self, password):
-        hashed = DBSession.query(Users).filter_by(username=self.username).first()
+        hashed = DBSession.query(Users).filter_by(
+            username=self.username).first()
         if bcrypt.hashpw(password, hashed._password) == hashed._password:
             return True
         else:
@@ -96,7 +98,7 @@ class Users(Base):
 
 class Profile(Base):
     __tablename__ = 'profile'
-    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
     status = Column(Boolean, default=True)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
     age = Column(Integer)
