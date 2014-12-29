@@ -35,9 +35,9 @@ class MyModel(Base):
 class SignUpSheet(Base):
     __tablename__ = 'signup'
     id = Column(Integer, primary_key=True)
-    status = Column(Boolean, default=True)
+    #status = Column(Boolean, default=True)
     is_signed_up = Column(Boolean, default=True)
-    date_signed_up = Column(DateTime, default=datetime.datetime.utcnow)
+    #date_signed_up = Column(DateTime, default=datetime.datetime.utcnow)
     _email = Column('email', String(80), nullable=False)
 
     def __init__(self, email):

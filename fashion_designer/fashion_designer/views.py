@@ -56,16 +56,19 @@ def signup(request):
     return {'signup': '/signup'}
 
 
-@view_config(request_method='GET', route_name='getusers', renderer='json')
+@view_config(route_name='users', request_method='GET',
+             renderer='templates/index.jinja2')
 def getUsers(request):
+    #count = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
     count = DBSession.query(SignUpSheet).count()
-    return Response(
-        body=json.dumps({'getUsers': count},
-                        status='200 OK',
-                        content_type='application/json'))
+    #return Response(
+    #    body=json.dumps(
+    return {'getUsers': count}
+    #        status='200 OK',
+    #        content_type='application/json'))
 
 
-@view_config(request_method='POST', route_name='createprofile', renderer='json')
+@view_config(route_name='profile', request_method='POST', renderer='json')
 def createProfile(request):
     try:
         profile = Profile(age=request.params['age'],
@@ -81,7 +84,7 @@ def createProfile(request):
                         content_type='application/json'))
 
 
-@view_config(request_method='GET', route_name='getprofile', renderer='json')
+@view_config(route_name='profile', request_method='GET', renderer='json')
 def getProfile(request):
     username = request.session('username')
     user_info = DBSession.query(Profile).filter_by(username=username).first()
