@@ -21,7 +21,6 @@
 </div>
 
 <div class="col-md-8">
-    {% for msg in messages %}
     <table class="table">
       <thead>
         <tr>
@@ -31,13 +30,14 @@
         </tr>
       </thead>
       <tbody>
+        {% for msg in messages %}
         <tr>
           <th data-field="page">{{msg.id}}</th>
           <th data-field="page">{{msg.page}}</th>
           <th data-field="msg">{{msg.msg}}</th>
         </tr>
+        {% endfor %}
       </tbody>
     </table>
-    {% endfor %}
 </div>
 {% endblock %}

@@ -16,20 +16,6 @@ from .models import (
     SystemMessages
 )
 
-"""
-@view_config(route_name='add_messages', request_method='GET',
-             renderer='templates/system_messages.jinja2')
-def get_sys_messages(request):
-    #Display the system messages added.
-    messages = DBSession.query(Messages).order_by(Messages.id.asc()).all()
-    if messages:
-        return {
-            'getMessages': '/add_system_messages',
-            'messages': messages
-        }
-    return {'getMessages': '/add_system_messages'}
-"""
-
 
 # Check for duplicate email addresses
 # Validate emails on the models side
@@ -107,7 +93,7 @@ def add_sys_messages(request):
         message = SystemMessages(page, msg)
         DBSession.add(message)
         request.session.flash(confirmation)
-        return HTTPFound(location=request.route_url('login'))
+        return HTTPFound(location=request.route_url('add_messages'))
     return {'getMessages': 'None'}
 
 
