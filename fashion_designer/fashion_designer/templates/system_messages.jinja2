@@ -1,0 +1,43 @@
+{% extends 'mytemplate.jinja2' %}
+{% block sysmsgs %}
+<div class="col-md-4">
+    <form class="form form-signin" role="form" method="POST">
+        <h2 class="form-system-heading">System Messages</h2>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                {{ error }}
+            </div>
+        {% endif %}
+    <div class="row form-group">
+      <input id="page" name="page" class="form-control" placeholder="Page" required autofocus>
+    </div>
+    <div class="row form-group">
+      <textarea id="msg" name="msg" class="form-control" placeholder="Message" row="5" required autofocus></textarea>
+    </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" name="msg.submitted">Submit</button>
+    </form>
+</div>
+
+<div class="col-md-8">
+    {% for msg in messages %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Page</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th data-field="page">{{msg.id}}</th>
+          <th data-field="page">{{msg.page}}</th>
+          <th data-field="msg">{{msg.msg}}</th>
+        </tr>
+      </tbody>
+    </table>
+    {% endfor %}
+</div>
+{% endblock %}

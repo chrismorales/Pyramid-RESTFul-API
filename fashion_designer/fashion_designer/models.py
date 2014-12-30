@@ -35,9 +35,9 @@ class MyModel(Base):
 class SignUpSheet(Base):
     __tablename__ = 'signup'
     id = Column(Integer, primary_key=True)
-    #status = Column(Boolean, default=True)
+    # status = Column(Boolean, default=True)
     is_signed_up = Column(Boolean, default=True)
-    #date_signed_up = Column(DateTime, default=datetime.datetime.utcnow)
+    # date_signed_up = Column(DateTime, default=datetime.datetime.utcnow())
     _email = Column('email', String(80), nullable=False)
 
     def __init__(self, email):
@@ -117,13 +117,18 @@ class Friend(Base):
     friend = relationship('Users', foreign_keys='Friend.friend_id')
 
 
-class Messages(Base):
+class SystemMessages(Base):
     __tablename__ = 'message'
     id = Column(Integer, primary_key=True)
-    created_by = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
-    date_created = Column(DateTime, default=datetime.datetime.utcnow)
-    status = Column(Boolean, default=True)
+    page = Column(String(80))
     msg = Column(String(120))
+    status = Column(Boolean, default=True)
+    date_created = Column(DateTime, default=datetime.datetime.utcnow())
+    # created_by = Column(Integer, ForeignKey(Users.user_id))
+
+    def __init__(self, page, msg):
+        self.page = page
+        self.msg = msg
 
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)

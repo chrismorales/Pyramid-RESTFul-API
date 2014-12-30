@@ -18,6 +18,7 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'pyramid_jinja2',
+    'pyramid_mailer',
     'nose',
     'coverage',
     'pylint',

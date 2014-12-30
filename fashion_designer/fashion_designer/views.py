@@ -13,7 +13,22 @@ from .models import (
     SignUpSheet,
     Users,
     Profile,
+    SystemMessages
 )
+
+"""
+@view_config(route_name='add_messages', request_method='GET',
+             renderer='templates/system_messages.jinja2')
+def get_sys_messages(request):
+    #Display the system messages added.
+    messages = DBSession.query(Messages).order_by(Messages.id.asc()).all()
+    if messages:
+        return {
+            'getMessages': '/add_system_messages',
+            'messages': messages
+        }
+    return {'getMessages': '/add_system_messages'}
+"""
 
 
 # Check for duplicate email addresses
@@ -27,7 +42,14 @@ def my_view(request):
     return {'one': one, 'project': 'fashion_designer'}
 
 
-@view_config(route_name='login', renderer='templates/login.jinja2')
+@view_config(route_name='login', request_method='GET',
+             renderer='templates/login.jinja2')
+def getlogin(request):
+    return {'login': '/login'}
+
+
+@view_config(route_name='login', request_method='POST',
+             renderer='templates/login.jinja2')
 def login(request):
     error = 'Invalid Username/Password'
     if 'form.submitted' in request.params:
@@ -59,13 +81,34 @@ def signup(request):
 @view_config(route_name='users', request_method='GET',
              renderer='templates/index.jinja2')
 def getUsers(request):
-    #count = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
+    # count = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
     count = DBSession.query(SignUpSheet).count()
-    #return Response(
+    # return Response(
     #    body=json.dumps(
     return {'getUsers': count}
     #        status='200 OK',
     #        content_type='application/json'))
+
+
+@view_config(route_name='add_messages', request_method='GET',
+             renderer='templates/system_messages.jinja2')
+def get_sys_messages(request):
+    messages = DBSession.query(SystemMessages).order_by("id asc").all()
+    return {'messages': messages}
+
+
+@view_config(route_name='add_messages', request_method='POST',
+             renderer='templates/system_messages.jinja2')
+def add_sys_messages(request):
+    confirmation = 'Message has been added!'
+    if 'msg.submitted' in request.params:
+        page = request.params['page']
+        msg = request.params['msg']
+        message = SystemMessages(page, msg)
+        DBSession.add(message)
+        request.session.flash(confirmation)
+        return HTTPFound(location=request.route_url('login'))
+    return {'getMessages': 'None'}
 
 
 @view_config(route_name='profile', request_method='POST', renderer='json')
