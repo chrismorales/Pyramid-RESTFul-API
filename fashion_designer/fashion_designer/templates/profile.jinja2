@@ -1,5 +1,5 @@
 {% extends 'mytemplate.jinja2' %}
-{% block login %}
+{% block profile %}
 <form id="login" class="form-signin" role="form" method="POST">
     <h2 class="form-login-heading">Login</h2>
     {% if error %}
@@ -10,10 +10,13 @@
     </div>
     {% endif %}
     <div class="form-group row">
-        <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
+        <input type="text" id="inputCollar" name="collar_measure" class="form-control" placeholder="Collar Size" required autofocus>
     </div>
     <div class="form-group row">
-        <input type="password" id="inputPswd" name="password" class="form-control" placeholder="Password" required autofocus>
+        <input type="text" id="inputWaist" name="waist_measure" class="form-control" placeholder="Waist Size" required autofocus>
+    </div>
+    <div class="form-group row">
+        <input type="text" id="inputWaist" name="inputStyle" class="form-control" placeholder="Style" required autofocus>
     </div>
     <label class="checkbox pull-left">
         <input type="checkbox" value="remember-me">

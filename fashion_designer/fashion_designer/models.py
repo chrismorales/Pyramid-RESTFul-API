@@ -124,11 +124,43 @@ class SystemMessages(Base):
     msg = Column(String(120))
     status = Column(Boolean, default=True)
     date_created = Column(DateTime, default=datetime.datetime.utcnow())
-    # created_by = Column(Integer, ForeignKey(Users.user_id))
+    created_by = Column(Integer)
 
     def __init__(self, page, msg):
         self.page = page
         self.msg = msg
+
+
+class Brands(Base):
+    __tablename__ = 'brands'
+    brand_id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=False)
+    sizechart = relationship('SizingChart', uselist=False, backref="brands")
+
+    def __init__(self, name):
+        self.name = name
+
+
+class SizingChart(Base):
+    __tablename__ = 'sizechart'
+    id = Column(Integer, primary_key=True)
+    brand_id = Column(Integer, ForeignKey(Brands.brand_id))
+    clothes_type = Column(String(80), nullable=False)
+    measurement = Column(Integer)
+    size = Column(String(80), nullable=False)
+    sex = Column(String(2)), default='M')
+    body_attr = relationship('ModelAttr', uselist=False, backref="sizechart")
+
+
+class ModelAttr(Base):
+    __tablename__ = 'bodyattributes'
+    id = Column(Integer, primary_key=True)
+    brand_id = Column(Integer, ForeignKey(SizingChart.id))
+    chest = Column(Integer)
+    waist = Column (Integer)
+    hip = Column(Integer)
+    inner_leg = Column(Integer)
+
 
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
