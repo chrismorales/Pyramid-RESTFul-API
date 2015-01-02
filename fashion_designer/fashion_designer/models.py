@@ -148,7 +148,7 @@ class SizingChart(Base):
     clothes_type = Column(String(80), nullable=False)
     measurement = Column(Integer)
     size = Column(String(80), nullable=False)
-    sex = Column(String(2)), default='M')
+    sex = Column(String(2), default='M')
     body_attr = relationship('ModelAttr', uselist=False, backref="sizechart")
 
 
@@ -157,10 +157,8 @@ class ModelAttr(Base):
     id = Column(Integer, primary_key=True)
     brand_id = Column(Integer, ForeignKey(SizingChart.id))
     chest = Column(Integer)
-    waist = Column (Integer)
+    waist = Column(Integer)
     hip = Column(Integer)
     inner_leg = Column(Integer)
-
-
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
