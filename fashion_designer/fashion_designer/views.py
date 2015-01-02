@@ -113,14 +113,17 @@ def createProfile(request):
                         content_type='application/json'))
 
 
-@view_config(route_name='profile', request_method='GET', renderer='json')
+# @view_config(route_name='profile', request_method='GET', renderer='json')
+@view_config(route_name='profile', request_method='GET',
+             renderer='templates/profile.jinja2')
 def getProfile(request):
     username = request.session('username')
     user_info = DBSession.query(Profile).filter_by(username=username).first()
-    return Response(
-        body=json.dumps({'getProfile': user_info},
-                        status='200 OK',
-                        content_type='application/json'))
+    return {'user': user_info}
+    # return Response(
+    #    body=json.dumps({'getProfile': user_info},
+    #                    status='200 OK',
+    #                    content_type='application/json'))
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
