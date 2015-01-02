@@ -50,15 +50,20 @@ class SignUpSheet(Base):
             return True
         return False
 
+    def get_email(self):
+        signup = DBSession.query(SignUpSheet).filter_by(_email=self._email).\
+            first()
+        return signup._email
+
 
 class Users(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
-    status = Column(Boolean, default=True)
+    # status = Column(Boolean, default=True)
     username = Column(String(80))
     _password = Column('password', String(120), unique=True)
     _email = Column('email', String(80))
-    is_activated = Column(Boolean, default=False)
+    is_activated = Column(Boolean)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
     @property
@@ -69,9 +74,19 @@ class Users(Base):
     def password(self, value):
         self._password = self.generate_password_hash(value)
 
-    def __init__(self, username, password):
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, value):
+        self._email = value
+
+    def __init__(self, username, password, email):
         self.username = username
         self.password = password
+        self.email = email
+        self.set_status(email)
 
     def username_exists(self):
         user = DBSession.query(Users).filter_by(username=self.username).first()
@@ -88,12 +103,19 @@ class Users(Base):
             return False
 
     def generate_password_hash(self, password):
-        hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(10))
         return hashed
 
     def get_date_created(self):
         date = DBSession.query(Users).filter_by(username=self.username).first()
         return date.date_created
+
+    def set_status(self, value):
+        signup = SignUpSheet(value)
+        if signup.get_email() == value:
+            self.is_activated = True
+        else:
+            self.is_activated = False
 
 
 class Profile(Base):

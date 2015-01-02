@@ -21,6 +21,17 @@ from .models import (
 # Validate emails on the models side
 @view_config(route_name='home', renderer='templates/mytemplate.jinja2')
 def my_view(request):
+    registration_confirmed = "Your account has been successfully registered!"
+    if 'register_form.submitted' in request.params:
+        username = request.params['username']
+        password = request.params['password']
+        email = request.params['email']
+        account = Users(username, password, email)
+        if account.username_exists():
+            return {'error': 'Username exists'}
+        DBSession.add(account)
+        request.session.flash(registration_confirmed, 'confirmed')
+        return HTTPFound(location=request.route_url('login'))
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:
