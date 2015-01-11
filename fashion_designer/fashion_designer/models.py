@@ -53,7 +53,10 @@ class SignUpSheet(Base):
     def get_email(self):
         signup = DBSession.query(SignUpSheet).filter_by(_email=self._email).\
             first()
-        return signup._email
+        if signup:
+            return signup._email
+        else:
+            return False
 
 
 class Users(Base):
@@ -72,7 +75,8 @@ class Users(Base):
 
     @password.setter
     def password(self, value):
-        self._password = self.generate_password_hash(value)
+        self._password = bcrypt.hashpw(value.encode('utf-8'),
+                                       bcrypt.gensalt())
 
     @property
     def email(self):
@@ -95,16 +99,11 @@ class Users(Base):
         return True
 
     def check_pswd_hash(self, password):
-        hashed = DBSession.query(Users).filter_by(
-            username=self.username).first()
-        if bcrypt.hashpw(password, hashed._password) == hashed._password:
+        if bcrypt.hashpw(password.encode('utf-8'),
+                         self.password.encode('utf-8'))\
+                == self.password.decode('utf-8'):
             return True
-        else:
-            return False
-
-    def generate_password_hash(self, password):
-        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(10))
-        return hashed
+        return False
 
     def get_date_created(self):
         date = DBSession.query(Users).filter_by(username=self.username).first()

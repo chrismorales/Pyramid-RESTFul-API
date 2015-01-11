@@ -52,9 +52,10 @@ def login(request):
     if 'form.submitted' in request.params:
         username = request.params['username']
         password = request.params['password']
-        user = Users(username, password)
-        if user.username_exists():
-            return HTTPFound(request.route_url('home'))
+        user = DBSession.query(Users).filter_by(username=username).first()
+        if user:
+            if user.check_pswd_hash(password):
+                return HTTPFound(request.route_url('home'))
         return {'error': error}
     return {'login': '/login'}
 
