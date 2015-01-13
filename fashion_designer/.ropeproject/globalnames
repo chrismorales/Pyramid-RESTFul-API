@@ -1,7 +1,0 @@
-€}q(Ufashion_designer]q(U
-add_routesqUmainqeUshutil]q(UcopyfileqUignore_patternsqUcopytreeqUget_archive_formatsq	Ucopyfileobjq
-Uregister_archive_formatqUcopymodeqUmake_archiveqUmoveqUunregister_archive_formatqUrmtreeqUErrorqUcopyqU	ExecErrorqUcopy2qUSpecialFileErrorqUcopystatqUWindowsErrorqeUfashion_designer.models]q(USizingChartqUFriendqUProfileqUMyModelqUBaseqUBrandsqU	ModelAttrqUSystemMessagesq USignUpSheetq!UUsersq"U	DBSessionq#eUfashion_designer.emails]q$UEmailerq%aU%fashion_designer.scripts.initializedb]q&(Uusageq'heUsetup]q((UfUCHANGESq)Urequiresq*Uhereq+UREADMEq,eU
-functional]Udatetime]q-(U	timedeltaq.UMAXYEARq/Udateq0Udatetime_CAPIq1Utzinfoq2Utimeq3UMINYEARq4Udatetimeq5eUfashion_designer.views]q6(UgetUsersq7UcreateProfileq8Uget_sys_messagesq9U
-getProfileq:Usignupq;Uconn_err_msgq<Ugetloginq=Umy_viewq>Uloginq?Uadd_sys_messagesq@eUfashion_designer.validators]qAUEmailqBaUunit.models_test]qCU
-TestModelsqDaUfashion_designer.scripts]Ufashion_designer.tests]qE(UTestMyViewFailureConditionqFUTestMyViewSuccessConditionqGeUos]qH(Upopen4qIUexecleqJUpopen3qKUSEEK_CURqLUspawnlpqMUexeclpqNUenvironqOUspawnvpqPUspawnlqQUexecvpqRUmakedirsqSUlinesepqTUP_WAITqUUspawnvqVUspawnveqWUexecvpeqXUunsetenvqYUSEEK_SETqZUgetenvq[Upopen2q\Uwalkq]Uspawnleq^Uexeclq_Unameq`USEEK_ENDqaUspawnlpeqbU	P_NOWAITOqcUP_NOWAITqdU
-removedirsqeUrenamesqfUspawnvpeqgUexeclpeqheUunit]u.

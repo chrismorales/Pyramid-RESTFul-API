@@ -37,4 +37,5 @@ def add_routes(config):
     config.add_route('signup', '/signup')
     config.add_route('profile', '/profile/{id}')
     config.add_route('users', '/users')
+    config.add_route('getBrands', '/controller/getBrands')
     config.scan()

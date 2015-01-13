@@ -3,6 +3,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.ext.serializer import loads, dumps
 from pyramid.httpexceptions import (
     HTTPFound,
 )
@@ -13,7 +14,8 @@ from .models import (
     SignUpSheet,
     Users,
     Profile,
-    SystemMessages
+    SystemMessages,
+    Brands,
 )
 
 
@@ -36,7 +38,10 @@ def my_view(request):
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'fashion_designer'}
+    return {'one': one,
+            'project': 'fashion_designer',
+            'register': True
+            }
 
 
 @view_config(route_name='login', request_method='GET',
@@ -79,11 +84,14 @@ def signup(request):
 @view_config(route_name='users', request_method='GET',
              renderer='templates/index.jinja2')
 def getUsers(request):
-    # count = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
+    users = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
     count = DBSession.query(SignUpSheet).count()
     # return Response(
     #    body=json.dumps(
-    return {'getUsers': count}
+    return {
+        'getUsers': count,
+        'user_list': users
+    }
     #        status='200 OK',
     #        content_type='application/json'))
 
@@ -136,6 +144,13 @@ def getProfile(request):
     #    body=json.dumps({'getProfile': user_info},
     #                    status='200 OK',
     #                    content_type='application/json'))
+
+
+@view_config(route_name='getBrands', renderer='json')
+def getBrands(request):
+    # brands = DBSession.query(Brands).order_by(Brands.brand_id.asc()).all()
+    # users = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
+    return {"HELLO": "WORLD"}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

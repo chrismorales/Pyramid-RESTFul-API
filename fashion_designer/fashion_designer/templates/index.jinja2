@@ -1,10 +1,39 @@
 {% extends 'mytemplate.jinja2' %}
 {% block index %}
 <div class="col-md-4">
+    <button class="btn btn-primary" onclick="loadBrand();">Load Brands</button>
+    <table class="table table-hover">
+        <tr>
+            <td></td>
+        <tr>
+    </table>
 </div>
 <div class="col-md-4">
-<h1> Users Signed Up<br/>{{getUsers}}</h1>
+    <h1> Users Signed Up</h1>
+    <h2>{{getUsers}}</h2>
 </div>
 <div class="col-md-4">
+    <dd>Usernames</dd>
+    {% for users in user_list %}
+        <dt>{{ users.id }} {{ users.get_email() }}</dt>
+    {% endfor %}
 </div>
+
+<script>
+function loadBrand()
+{
+    // Make an AJAX call to the functions file to load the
+    // fields properly
+    $.ajax({
+       type: 'GET',
+        url: "/controller/getBrands",
+        data: {},
+        success: function(data)
+        {
+            console.log(data);
+            //data = json.parse(data);
+        }
+    });
+}
+</script>
 {% endblock %}
