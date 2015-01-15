@@ -7,8 +7,6 @@ from pyramid.httpexceptions import (
     HTTPFound,
 )
 
-import ajax_function
-
 from .models import (
     DBSession,
     MyModel,
@@ -16,7 +14,6 @@ from .models import (
     Users,
     Profile,
     SystemMessages,
-    Brands,
 )
 
 
@@ -146,17 +143,6 @@ def getProfile(request):
     #                    status='200 OK',
     #                    content_type='application/json'))
 
-
-@view_config(route_name='ajax', renderer='json')
-def ajaxFunc(request):
-    if request.GET:
-        # call function for retrieving data
-        if request.params['function'] == 'getBrands':
-            result = ajax_function.getBrands()
-            return result
-    elif request.POST:
-        # call function for inserting or updating data
-        print "POST Function"
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
