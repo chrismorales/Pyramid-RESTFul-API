@@ -3,10 +3,11 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy.ext.serializer import loads, dumps
 from pyramid.httpexceptions import (
     HTTPFound,
 )
+
+import ajax_function
 
 from .models import (
     DBSession,
@@ -146,11 +147,16 @@ def getProfile(request):
     #                    content_type='application/json'))
 
 
-@view_config(route_name='getBrands', renderer='json')
-def getBrands(request):
-    # brands = DBSession.query(Brands).order_by(Brands.brand_id.asc()).all()
-    # users = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
-    return {"HELLO": "WORLD"}
+@view_config(route_name='ajax', renderer='json')
+def ajaxFunc(request):
+    if request.GET:
+        # call function for retrieving data
+        if request.params['function'] == 'getBrands':
+            result = ajax_function.getBrands()
+            return result
+    elif request.POST:
+        # call function for inserting or updating data
+        print "POST Function"
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

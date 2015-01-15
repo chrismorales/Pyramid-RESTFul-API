@@ -2,10 +2,7 @@
 {% block index %}
 <div class="col-md-4">
     <button class="btn btn-primary" onclick="loadBrand();">Load Brands</button>
-    <table class="table table-hover">
-        <tr>
-            <td></td>
-        <tr>
+    <table class="table table-hover" id="brand_results">
     </table>
 </div>
 <div class="col-md-4">
@@ -13,10 +10,20 @@
     <h2>{{getUsers}}</h2>
 </div>
 <div class="col-md-4">
-    <dd>Usernames</dd>
-    {% for users in user_list %}
-        <dt>{{ users.id }} {{ users.get_email() }}</dt>
-    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usernames</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for users in user_list %}
+            <tr>
+                <td>{{ users.id }} {{ users.get_email() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <script>
@@ -26,12 +33,16 @@ function loadBrand()
     // fields properly
     $.ajax({
        type: 'GET',
-        url: "/controller/getBrands",
-        data: {},
+        url: "/ajax",
+        data: { "function": "getBrands" },
         success: function(data)
         {
-            console.log(data);
-            //data = json.parse(data);
+            for(i=0; i<data.length; i++)
+            {
+              // console.log(JSON.stringify(data[i], null, '\t'));
+              // console.log(data[i]["key"]);
+              $("#brands_results").append("<tr><td>"+data[i]["key"]+"</td><td>"+data[i]["name"]+"</td></tr>");
+            }
         }
     });
 }
