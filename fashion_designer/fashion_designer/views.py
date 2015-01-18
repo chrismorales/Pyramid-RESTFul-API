@@ -1,6 +1,7 @@
 import json
 from pyramid.response import Response
 from pyramid.view import view_config
+from email import Emailer
 
 from sqlalchemy.exc import DBAPIError
 from pyramid.httpexceptions import (
@@ -74,6 +75,8 @@ def signup(request):
         if signee.is_duplicate_email():
             return {'error': error}
         DBSession.add(signee)
+        mailer = Emailer(email, request)
+        mailer.send_message()
         request.session.flash(account_confirmed, 'is_confirmed')
         return HTTPFound(location=request.route_url('login'))
     return {'signup': '/signup'}

@@ -1,4 +1,5 @@
 from pyramid.config import Configurator
+from pyramid_mailer.mailer import Mailer
 from pyramid.session import SignedCookieSessionFactory
 from sqlalchemy import engine_from_config
 
@@ -7,22 +8,18 @@ from .models import (
     Base,
     )
 
+mailer = Mailer()
+
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    my_session_factory = SignedCookieSessionFactory('itsaseekreet')
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
-    # settings = {
-    #    'mail.host': 'localhost',
-    #    'mail.port': '25',
-    #    'username': 'nogareru@gmail.com',
-    #    'password': 'who escaped.qpwoei3#'
-    # }
-    config = Configurator(settings=settings)
-    config.set_session_factory(my_session_factory)
+    my_session_factory = SignedCookieSessionFactory('itsaseekreet')
+    config = Configurator(settings=settings,
+                          session_factory=my_session_factory)
     config.include('pyramid_jinja2')
     config.include('pyramid_mailer')
     config.add_static_view('static', 'static', cache_max_age=3600)
