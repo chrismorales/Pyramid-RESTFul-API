@@ -15,7 +15,7 @@ class Emailer():
     def send_message(self):
         """ Sends message base of URL """
         # Query DB for appropriate message and parameters to whom to send to
-        TITLE = "Congratulations! Welcome to Fashio Designer!"
+        TITLE = "Congratulations! Welcome to Fashion Designer!"
         MESSAGE = "Please click on the link in order to activate your account!"
         SENDER = "nogareru@gmail.com"
         mailer = get_mailer(self.request)

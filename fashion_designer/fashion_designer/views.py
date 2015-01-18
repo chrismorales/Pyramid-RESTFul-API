@@ -53,15 +53,26 @@ def getlogin(request):
              renderer='templates/login.jinja2')
 def login(request):
     error = 'Invalid Username/Password'
+    csrf_token = request.session.get_csrf_token()
     if 'form.submitted' in request.params:
         username = request.params['username']
         password = request.params['password']
         user = DBSession.query(Users).filter_by(username=username).first()
         if user:
             if user.check_pswd_hash(password):
+                request.session['logged_in'] = True
                 return HTTPFound(request.route_url('home'))
         return {'error': error}
-    return {'login': '/login'}
+    return {
+        'login': '/login',
+        'csrf_token': csrf_token,
+    }
+
+
+@view_config(route_name='logout')
+def logout(request):
+    request.session['logged_in'] = False
+    return HTTPFound(request.route_url('home'))
 
 
 @view_config(route_name='signup', renderer='templates/signup.jinja2')
