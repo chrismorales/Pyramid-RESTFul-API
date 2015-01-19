@@ -1,5 +1,9 @@
 import bcrypt
 import datetime
+from pyramid.security import (
+    Allow,
+    Everyone,
+)
 from sqlalchemy import (
     Boolean,
     Column,
@@ -181,5 +185,13 @@ class ModelAttr(Base):
     waist = Column(Integer)
     hip = Column(Integer)
     inner_leg = Column(Integer)
+
+
+class RootFactory(object):
+    __acl__ = [(Allow, Everyone, 'view'),
+               (Allow, 'group:editors', 'edit')]
+
+    def __init__(self, request):
+        pass
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)

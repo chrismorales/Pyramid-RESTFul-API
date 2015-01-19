@@ -1,6 +1,13 @@
 import json
 from pyramid.response import Response
-from pyramid.view import view_config
+from pyramid.view import (
+    view_config,
+    forbidden_view_config,
+)
+from pyramid.security import (
+    remember,
+    forget,
+)
 from email import Emailer
 
 from sqlalchemy.exc import DBAPIError
@@ -20,7 +27,8 @@ from .models import (
 
 # Check for duplicate email addresses
 # Validate emails on the models side
-@view_config(route_name='home', renderer='templates/mytemplate.jinja2')
+@view_config(route_name='home', renderer='templates/mytemplate.jinja2',
+             permission='view')
 def my_view(request):
     registration_confirmed = "Your account has been successfully registered!"
     if 'register_form.submitted' in request.params:
@@ -37,42 +45,51 @@ def my_view(request):
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one,
-            'project': 'fashion_designer',
-            'register': True
-            }
+    return dict(
+        one=one,
+        project='fashion_designer',
+        register=True,
+        logged_in=request.authenticated_userid
+    )
 
 
 @view_config(route_name='login', request_method='GET',
              renderer='templates/login.jinja2')
 def getlogin(request):
-    return {'login': '/login'}
+    login = request.route_url('login')
+    return dict(
+        login=login
+    )
 
 
+@forbidden_view_config(renderer='templates/login.jinja2')
 @view_config(route_name='login', request_method='POST',
              renderer='templates/login.jinja2')
 def login(request):
     error = 'Invalid Username/Password'
-    csrf_token = request.session.get_csrf_token()
     if 'form.submitted' in request.params:
         username = request.params['username']
         password = request.params['password']
         user = DBSession.query(Users).filter_by(username=username).first()
         if user:
             if user.check_pswd_hash(password):
-                request.session['logged_in'] = True
-                return HTTPFound(request.route_url('home'))
-        return {'error': error}
-    return {
-        'login': '/login',
-        'csrf_token': csrf_token,
-    }
+                headers = remember(request, username)
+                return HTTPFound(
+                    location=request.route_url('home'),
+                    headers=headers
+                )
+        return dict(
+            error=error
+        )
 
 
 @view_config(route_name='logout')
 def logout(request):
-    request.session['logged_in'] = False
-    return HTTPFound(request.route_url('home'))
+    headers = forget(request)
+    return HTTPFound(
+        location=request.route_url('home'),
+        headers=headers
+    )
 
 
 @view_config(route_name='signup', renderer='templates/signup.jinja2')
@@ -90,20 +107,24 @@ def signup(request):
         mailer.send_message()
         request.session.flash(account_confirmed, 'is_confirmed')
         return HTTPFound(location=request.route_url('login'))
-    return {'signup': '/signup'}
+    return dict(
+        signup='/signup',
+        logged_in=request.authenticated_userid
+    )
 
 
 @view_config(route_name='users', request_method='GET',
-             renderer='templates/index.jinja2')
+             renderer='templates/index.jinja2', permission='view')
 def getUsers(request):
     users = DBSession.query(SignUpSheet).order_by(SignUpSheet.id.asc()).all()
     count = DBSession.query(SignUpSheet).count()
     # return Response(
     #    body=json.dumps(
-    return {
-        'getUsers': count,
-        'user_list': users
-    }
+    return dict(
+        getUsers=count,
+        user_list=users,
+        logged_in=request.authenticated_userid
+    )
     #        status='200 OK',
     #        content_type='application/json'))
 
@@ -112,7 +133,10 @@ def getUsers(request):
              renderer='templates/system_messages.jinja2')
 def get_sys_messages(request):
     messages = DBSession.query(SystemMessages).order_by("id asc").all()
-    return {'messages': messages}
+    return dict(
+        messages=messages,
+        logged_in=request.authenticated_userid
+    )
 
 
 @view_config(route_name='add_messages', request_method='POST',
@@ -126,7 +150,10 @@ def add_sys_messages(request):
         DBSession.add(message)
         request.session.flash(confirmation)
         return HTTPFound(location=request.route_url('add_messages'))
-    return {'getMessages': 'None'}
+    return dict(
+        getMessages=None,
+        logged_in=request.authenticated_userid
+    )
 
 
 @view_config(route_name='profile', request_method='POST', renderer='json')
