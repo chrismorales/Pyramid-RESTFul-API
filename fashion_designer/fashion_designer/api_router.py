@@ -4,6 +4,7 @@ from email import Emailer
 
 from .models import (
     ApiKeys,
+    Users,
 )
 
 import json
@@ -11,12 +12,41 @@ import json
 
 @view_config(route_name='remote_login', renderer='json')
 def login_validation(request):
-    get_remote_session_key = request.params['api_ses_key']
-    key = ApiKeys.getSessionKey(get_remote_session_key)
+    status=False
+    session_key = request.matchdict['api_ses_key']
+    username = request.params['username']
+    password = request.params['password']
+    key = ApiKeys.getSessionKey(session_key)
     if key:
-        msg = "Key exists!"
-    else:
-        msg = "Key doesn't exists!"
-    return Reponse(body=json.dumps(
-        {"msg": msg}),
-        content_type="application/json")
+        user = DBSession.query(Users).filter_by(Users.username=username).first()
+        if user.check_pswd_hash(password):
+            status=True
+        return Reponse(body=json.dumps(
+            {"tag": "login", "status": status}),
+            content_type="application/json")
+
+
+@view_config(route_name='register', renderer='json')
+def register(request):
+    error_msg = None
+    username = request.params['username']
+    password = request.params['password']
+    email = request.params['email']
+    session_key = request.matchdict['api_ses_key']
+    valid_key = ApiKeys.getSessionKey(session_key)
+    if valid_key:
+        # Register the user
+        user = User(username, password, email)
+        if user.username_exists():
+            status=False
+            error_msg = "Username already exists!"
+        else:
+            status=True
+            DBSession.add(user)
+            mailer = Emailer(email, request)
+            mailer.send_message()
+        return Response(body=json.dumps(
+            {"tag": "register", "status": status, "error_msg": error_msg}),
+            content_type="application/json")
+
+

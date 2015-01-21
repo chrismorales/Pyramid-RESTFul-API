@@ -34,6 +34,7 @@ def main(global_config, **settings):
     config.include('pyramid_mailer')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.include(add_routes)
+    config.include(api_routes)
     return config.make_wsgi_app()
 
 
@@ -47,3 +48,9 @@ def add_routes(config):
     config.add_route('add_messages', '/add_system_messages')
     config.add_route('ajax', '/ajax')
     config.scan()
+
+
+def api_routes(config):
+    config.add_routes('remote_login', '/login/{api_key}')
+    config.add_routes('register', '/register/{api_key}')
+    config.add_routes('user_profile', '/profile/{user_id}')
