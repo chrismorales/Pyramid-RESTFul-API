@@ -1,6 +1,7 @@
 import bcrypt
 import base64
-import os
+import hashlib
+import random
 import datetime
 from pyramid.security import (
     Allow,
@@ -214,16 +215,22 @@ class ApiKeys(Base):
         return self.status
 
     def setSessionKey(self):
-        return base64.b64encode(os.urandom(16))
+        api_key = base64.b64encode(hashlib.sha224(
+            str(random.getrandbits(256))).digest(),
+            random.choice(['rA', 'aZ', 'gQ', 'hH', 'hG', 'aR', 'DD'])).rstrip(
+                '==')
+
+        return api_key
 
     def getSessionKey(self, value):
         is_valid = DBSession.query(ApiKeys).filter_by(session_key=value).first()
         if is_valid.session_key:
             return True
         return False
+        pass
 
     def getUser(self, user):
-        is_valid = DBSession.query(ApiKeys).filter_by(user_id=user).first()
+        is_valid = DBSession.query(Users).filter_by(user_id=user).first()
         if is_valid.user_id:
             return True
 
