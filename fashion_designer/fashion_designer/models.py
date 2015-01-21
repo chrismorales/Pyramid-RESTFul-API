@@ -201,12 +201,10 @@ class RootFactory(object):
 class ApiKeys(Base):
     __tablename__ = 'api_key_accounts'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False)
     session_key = Column(String(180), nullable=False)
     status = Column(Boolean, default=False, nullable=False)
 
-    def __init__(self, user_id):
-        self.user_id = self.getUser(user_id)
+    def __init__(self):
         self.session_key = self.setSessionKey()
         self.status = self.setStatus()
 
@@ -227,11 +225,5 @@ class ApiKeys(Base):
         if is_valid.session_key:
             return True
         return False
-        pass
-
-    def getUser(self, user):
-        is_valid = DBSession.query(Users).filter_by(user_id=user).first()
-        if is_valid.user_id:
-            return True
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
