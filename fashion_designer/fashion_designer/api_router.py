@@ -1,9 +1,10 @@
-from pyramid.response import Reponse
+from pyramid.response import Response
 from pyramid.view import view_config
 from email import Emailer
 
 from .models import (
     ApiKeys,
+    DBSession,
     Users,
 )
 
@@ -12,16 +13,16 @@ import json
 
 @view_config(route_name='remote_login', renderer='json')
 def login_validation(request):
-    status=False
+    status = False
     session_key = request.matchdict['api_ses_key']
     username = request.params['username']
     password = request.params['password']
     key = ApiKeys.getSessionKey(session_key)
     if key:
-        user = DBSession.query(Users).filter_by(Users.username=username).first()
+        user = DBSession.query(Users).filter_by(username=username).first()
         if user.check_pswd_hash(password):
-            status=True
-        return Reponse(body=json.dumps(
+            status = True
+        return Response(body=json.dumps(
             {"tag": "login", "status": status}),
             content_type="application/json")
 
@@ -36,17 +37,15 @@ def register(request):
     valid_key = ApiKeys.getSessionKey(session_key)
     if valid_key:
         # Register the user
-        user = User(username, password, email)
+        user = Users(username, password, email)
         if user.username_exists():
-            status=False
+            status = False
             error_msg = "Username already exists!"
         else:
-            status=True
+            status = True
             DBSession.add(user)
             mailer = Emailer(email, request)
             mailer.send_message()
         return Response(body=json.dumps(
             {"tag": "register", "status": status, "error_msg": error_msg}),
             content_type="application/json")
-
-

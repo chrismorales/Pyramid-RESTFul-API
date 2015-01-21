@@ -1,4 +1,6 @@
-import bcrypt, base64, os
+import bcrypt
+import base64
+import os
 import datetime
 from pyramid.security import (
     Allow,
@@ -214,18 +216,15 @@ class ApiKeys(Base):
     def setSessionKey(self):
         return base64.b64encode(os.urandom(16))
 
-    def getSessionKey(self, key):
-        is_valid = DBSession.query(ApiKeys).filter_by(ApiKeys.session_key=key).\
-            first()
+    def getSessionKey(self, value):
+        is_valid = DBSession.query(ApiKeys).filter_by(session_key=value).first()
         if is_valid.session_key:
             return True
         return False
 
     def getUser(self, user):
-        is_valid = DBSession.query(ApiKeys).filter_by(ApiKeys.user_id=user).\
-            first()
+        is_valid = DBSession.query(ApiKeys).filter_by(user_id=user).first()
         if is_valid.user_id:
             return True
-
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
