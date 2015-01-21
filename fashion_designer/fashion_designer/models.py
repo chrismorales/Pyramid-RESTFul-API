@@ -1,4 +1,4 @@
-import bcrypt
+import bcrypt, base64, os
 import datetime
 from pyramid.security import (
     Allow,
@@ -193,5 +193,39 @@ class RootFactory(object):
 
     def __init__(self, request):
         pass
+
+
+class ApiKeys(Base):
+    __tablename__ = 'api_key_accounts'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False)
+    session_key = Column(String(180), nullable=False)
+    status = Column(Boolean, default=False, nullable=False)
+
+    def __init__(self, user_id):
+        self.user_id = self.getUser(user_id)
+        self.session_key = self.setSessionKey()
+        self.status = self.setStatus()
+
+    def setStatus(self):
+        self.status = True
+        return self.status
+
+    def setSessionKey(self):
+        return base64.b64encode(os.urandom(16))
+
+    def getSessionKey(self, key):
+        is_valid = DBSession.query(ApiKeys).filter_by(ApiKeys.session_key=key).\
+            first()
+        if is_valid.session_key:
+            return True
+        return False
+
+    def getUser(self, user):
+        is_valid = DBSession.query(ApiKeys).filter_by(ApiKeys.user_id=user).\
+            first()
+        if is_valid.user_id:
+            return True
+
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
