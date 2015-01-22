@@ -51,6 +51,7 @@ def add_routes(config):
 
 
 def api_routes(config):
+    config.add_route('api', '/api/{api_key}')
     config.add_route('remote_login', '/login/{api_key}')
     config.add_route('register', '/register/{api_key}')
     config.add_route('create_profile', '/create_profile')
