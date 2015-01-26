@@ -1,5 +1,7 @@
 {% extends '../mytemplate.jinja2' %}
 {% block profile %}
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
     {% for info in user.profile %}
         {% if info.is_created %}
             <!-- Load the template for creating a profile -->
@@ -9,4 +11,5 @@
             {% include 'create_profile.jinja2' %}
         {% endif %}
     {% endfor %}
+    </div>
 {% endblock %}

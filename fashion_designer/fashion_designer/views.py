@@ -1,5 +1,5 @@
 import os
-import uuid
+import shutil
 from pyramid.response import Response
 from pyramid.view import (
     view_config,
@@ -188,24 +188,17 @@ def createProfile(request):
         return HTTPFound(location=request.route_url('profile', id=user_id))
 
 
-def store_image(request):
-    filename = request.POST['img'].filename
-    input_file = request.POST['img'].file
-    file_path = os.path.join('/tmp', '%s.png' % uuid.uuid4())
-    temp_file_path = file_path + '~'
-    output_file = open(temp_file_path, 'wb')
+@view_config(route_name='store_mp3_view')
+def store_mp3_view(request):
+    if "photo.submitted" in request.params:
 
-    # Finally write the data to a temporary file
-    input_file.seek(0)
-    while True:
-        data = input_file.read(2 << 16)
-        if not data:
-            break
-        output_file.write(data)
+        filename = request.POST['mp3'].filename
+        input_file = request.POST['mp3'].file
 
-    output_file.close()
-    os.rename(temp_file_path, file_path)
-    return Response('OK')
+        file_path = os.path.join('/tmp', filename)
+        with open(file_path, 'wb') as output_file:
+            shutil.copyfileobj(input_file, output_file)
+        return HTTPFound(request.route_url('home'))
 
 
 conn_err_msg = """\

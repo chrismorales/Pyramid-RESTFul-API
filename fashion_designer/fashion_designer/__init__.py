@@ -47,6 +47,8 @@ def add_routes(config):
     config.add_route('users', '/users')
     config.add_route('add_messages', '/add_system_messages')
     config.add_route('ajax', '/ajax')
+    config.add_route('store_mp3_view', '/store_mp3_view')
+
     config.scan()
 
 

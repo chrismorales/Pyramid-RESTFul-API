@@ -2,7 +2,12 @@
     <div class="col-md-10">
         <h2 class="form-login-heading" style="text-align: center;">Profile</h2>
         <div class="row">
-            <img src="http://placehold.it/140x140" alt="profile-image" class="img-rounded">
+            <form action="/store_mp3_view" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                <img src="http://placehold.it/140x140" alt="profile-image" class="img-rounded">
+                <label for="mp3">MP3</label>
+                <input id="mp3" name="mp3" type="file" value=""/>
+                <input name="photo.submitted" type="submit" value="submit"/>
+            </form>
             {% for name in user.profile %}
                 <p>Username: {{ user.username }}</p>
                 <p>Email: {{ user.email }}</p>
