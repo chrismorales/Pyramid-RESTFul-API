@@ -1,0 +1,12 @@
+{% extends '../mytemplate.jinja2' %}
+{% block profile %}
+    {% for info in user.profile %}
+        {% if info.is_created %}
+            <!-- Load the template for creating a profile -->
+            {% include 'user_profile.jinja2' %}
+        {% else %}
+            <!-- Load the static profile view --> 
+            {% include 'create_profile.jinja2' %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

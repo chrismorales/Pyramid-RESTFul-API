@@ -1,0 +1,16 @@
+<div class="col-md-6">
+    <div class="col-md-10">
+        <h2 class="form-login-heading" style="text-align: center;">Profile</h2>
+        <div class="row">
+            <img src="http://placehold.it/140x140" alt="profile-image" class="img-rounded">
+            {% for name in user.profile %}
+                <p>Username: {{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Age: {{ name.age }}</p>
+                <p>Sex: {{ name.sex}}</p>
+                <p>Location: {{ name.location}}</p>
+                <p>style: {{ name.style}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-import json
+import os
+import uuid
 from pyramid.response import Response
 from pyramid.view import (
     view_config,
@@ -156,33 +157,55 @@ def add_sys_messages(request):
     )
 
 
-@view_config(route_name='profile', request_method='POST', renderer='json')
-def createProfile(request):
-    try:
-        profile = Profile(age=request.params['age'],
-                          sex=request.params['sex'],
-                          location=request.params['location'],
-                          style=request.params['style'])
-        DBSession.add(profile)
-    except:
-        raise 'SQLALCHEMY ERROR'
-    return Response(
-        body=json.dumps({'createProfile': 'creating...'},
-                        status='201 Created',
-                        content_type='application/json'))
-
-
-# @view_config(route_name='profile', request_method='GET', renderer='json')
 @view_config(route_name='profile', request_method='GET',
-             renderer='templates/profile.jinja2')
+             renderer='templates/profile/profile.jinja2')
 def getProfile(request):
-    username = request.session('username')
-    user_info = DBSession.query(Profile).filter_by(username=username).first()
-    return {'user': user_info}
-    # return Response(
-    #    body=json.dumps({'getProfile': user_info},
-    #                    status='200 OK',
-    #                    content_type='application/json'))
+    id = request.matchdict['id']
+    user_info = DBSession.query(Users).filter_by(user_id=id).first()
+    return dict(
+        user=user_info,
+        logged_in=request.authenticated_userid
+    )
+
+
+@view_config(route_name='profile', request_method='POST',
+             renderer='templates/profile/profile.jinja2')
+def createProfile(request):
+    age = request.params['age']
+    sex = request.params['sex']
+    location = request.params['location']
+    style = request.params['style']
+    user_id = request.matchdict['id']
+    if "form.submitted" in request.params:
+        profile = Profile(
+            user_id,
+            age,
+            sex,
+            location,
+            style
+        )
+        DBSession.add(profile)
+        return HTTPFound(location=request.route_url('profile', id=user_id))
+
+
+def store_image(request):
+    filename = request.POST['img'].filename
+    input_file = request.POST['img'].file
+    file_path = os.path.join('/tmp', '%s.png' % uuid.uuid4())
+    temp_file_path = file_path + '~'
+    output_file = open(temp_file_path, 'wb')
+
+    # Finally write the data to a temporary file
+    input_file.seek(0)
+    while True:
+        data = input_file.read(2 << 16)
+        if not data:
+            break
+        output_file.write(data)
+
+    output_file.close()
+    os.rename(temp_file_path, file_path)
+    return Response('OK')
 
 
 conn_err_msg = """\

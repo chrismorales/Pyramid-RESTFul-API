@@ -31,7 +31,13 @@ def login_validation(request):
     else:
         error_msg = "API Key Invalid"
     return Response(body=json.dumps(
-        {"tag": "login", "status": status, "error_msg": error_msg}),
+        {
+            "tag": "login",
+            "status_code": "200 OK",
+            "status": status,
+            "error_msg": error_msg
+        }
+    ),
         content_type="application/json")
 
 
@@ -67,11 +73,17 @@ def register(request):
         {"tag": "register", "status": status, "error_msg": error_msg}),
         content_type="application/json")
 
-
+"""
 @view_config(route_name='create_profile', request_method="POST",
              renderer='json')
 def create_profile(request):
     pass
+
+
+@view_config(route_name="get_profile", request_method="GET", renderer="json")
+def get_profile(request):
+    pass
+"""
 
 
 @view_config(route_name='api', request_method="GET")

@@ -1,6 +1,7 @@
 {% extends 'mytemplate.jinja2' %}
 {% block login %}
 <form id="login" class="form-signin" role="form" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}">
     <h2 class="form-login-heading">Login</h2>
     {% if error %}
     <div class="alert alert-danger" role="alert">

@@ -75,6 +75,7 @@ class Users(Base):
     _email = Column('email', String(80))
     is_activated = Column(Boolean)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
+    profile = relationship("Profile", backref="profile")
 
     @property
     def password(self):
@@ -126,14 +127,24 @@ class Users(Base):
 
 class Profile(Base):
     __tablename__ = 'profile'
-    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True,
+                     nullable=False)
     status = Column(Boolean, default=True)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
     age = Column(Integer)
     sex = Column(String(20))
     location = Column(String(120))
     style = Column(String(120))
-    friend_count = Column(Integer)
+    friend_count = Column(Integer, default=0)
+    is_created = Column(Boolean, default=False)
+
+    def __init__(self, user_id, age, sex, location, style):
+        self.user_id = user_id
+        self.age = age
+        self.sex = sex
+        self.location = location
+        self.style = style
+        self.is_created = True
 
 
 class Friend(Base):
@@ -203,6 +214,7 @@ class ApiKeys(Base):
     id = Column(Integer, primary_key=True)
     session_key = Column(String(180), nullable=False)
     status = Column(Boolean, default=False, nullable=False)
+    # date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self):
         self.session_key = self.setSessionKey()

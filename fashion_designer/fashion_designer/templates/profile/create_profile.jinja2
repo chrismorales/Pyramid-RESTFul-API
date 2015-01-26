@@ -1,0 +1,76 @@
+<form id="create_profile" class="form-signin" role="form" method="POST">
+    <h2 class="form-login-heading" style="text-align: center;">Create Profile</h2>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- Image for the user -->
+    <div class="form-group row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-5">
+        <img src="http://placehold.it/140x140" alt="profile-image" class="img-rounded">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-md-2"></div>
+      <div class="col-md-4">
+        <select class="form-control" id="age_list" name="age">
+            <!-- Dynamically build this with javascript -->
+            <option>16</option>
+            <option>24</option>
+            <option>30</option>
+            <option>35</option>
+            <option>40</option>
+          </select>
+      </div>
+      <div class="col-md-4">
+        <select class="form-control" id="sex_list" name="sex">
+            <!-- Dynamically build this with javascript -->
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <input type="text" id="inputLocation" name="location" class="form-control" placeholder="City" required autofocus>
+      </div>
+      <div class="col-md-4">
+        <select class="form-control" name="state">
+            <option>AZ</option>
+            <option>CA</option>
+            <option>NV</option>
+            <option>TX</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <input type="text" id="inputCollar" name="collar_measure" class="form-control" placeholder="Collar Size" required autofocus>
+    </div>
+
+    <div class="form-group row">
+        <input type="text" id="inputWaist" name="waist_measure" class="form-control" placeholder="Waist Size" required autofocus>
+    </div>
+
+    <div class="form-group row">
+        <input type="text" id="inputStyle" name="style" class="form-control" placeholder="Style" required autofocus>
+    </div>
+
+    <h2 class="spacer"></h2>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" name="form.submitted">Submit</button>
+</form>
+<script>
+    $(".dropdown-menu li a").click(function() {
+        var selText = $(this).text();
+        $(this).parents('btn-group').find('.dropdown-toggle').html(selText+'<span class="caret"></span>');
+    });
+</script>
