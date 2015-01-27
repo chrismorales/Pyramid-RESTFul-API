@@ -50,15 +50,30 @@
               <p class="lead">Welcome to <span class="font-normal">{{project}}</span>, an&nbsp;application generated&nbsp;by<br>the <span class="font-normal">Pyramid Web Framework 1.5.2</span>.</p>
             </div>
           </div>
-          <div class="col-md-4">
-              <a href="/signup">Sign Up</a>
-              {% block signup %}
-              {% endblock %}
+            {% if not request.authenticated_userid %}
+                <div class="col-md-4">
+                    <a href="/signup">Sign Up</a>
+                    {% block signup %}
+                    {% endblock %}
 
-              <a href="/login">Login</a>
-              {% block login %}
-              {% endblock %}
-          </div>
+                    <a href="/login">Login</a>
+                    {% block login %}
+                    {% endblock %}
+                </div>
+            {% else %}
+                <div class="col-md-4">
+                {% if request.session.peek_flash('logged_in') %}
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    {% for msg in request.session.pop_flash('logged_in') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                    <a href="/logout">Logout</a>
+                </div>
+            {% endif %}
         </div>
         <div class="row" id="index">
             {% if not logged_in %}

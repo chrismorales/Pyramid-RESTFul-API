@@ -57,10 +57,13 @@ def my_view(request):
 @view_config(route_name='login', request_method='GET',
              renderer='templates/login.jinja2')
 def getlogin(request):
-    login = request.route_url('login')
-    return dict(
-        login=login
-    )
+    if not request.authenticated_userid:
+        login = request.route_url('login')
+        return dict(
+            login=login
+        )
+    request.session.flash('Already logged in!', 'logged_in')
+    return HTTPFound(request.route_url('home'))
 
 
 @forbidden_view_config(renderer='templates/login.jinja2')
@@ -191,14 +194,20 @@ def createProfile(request):
 @view_config(route_name='store_mp3_view')
 def store_mp3_view(request):
     if "photo.submitted" in request.params:
+        userid = request.params['user_id']
+        profile = DBSession.query(Profile).filter_by(user_id=userid).first()
 
         filename = request.POST['mp3'].filename
         input_file = request.POST['mp3'].file
 
-        file_path = os.path.join('/tmp', filename)
+        file_path = os.path.join(
+            '/home/vagrant/Pyramid-RESTFul-API/fashion_designer/fashion_designer/static/images', filename)
+        profile.img_path = '/static/images/' + filename
+        profile = DBSession.merge(profile)
+
         with open(file_path, 'wb') as output_file:
             shutil.copyfileobj(input_file, output_file)
-        return HTTPFound(request.route_url('home'))
+        return HTTPFound(request.route_url('profile', id=userid))
 
 
 conn_err_msg = """\

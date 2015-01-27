@@ -130,13 +130,14 @@ class Profile(Base):
     user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True,
                      nullable=False)
     status = Column(Boolean, default=True)
-    date_created = Column(DateTime, default=datetime.datetime.utcnow)
     age = Column(Integer)
     sex = Column(String(20))
     location = Column(String(120))
     style = Column(String(120))
+    img_path = Column(String(120), default="")
     friend_count = Column(Integer, default=0)
     is_created = Column(Boolean, default=False)
+    date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, user_id, age, sex, location, style):
         self.user_id = user_id

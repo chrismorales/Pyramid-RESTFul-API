@@ -3,12 +3,13 @@
         <h2 class="form-login-heading" style="text-align: center;">Profile</h2>
         <div class="row">
             <form action="/store_mp3_view" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-                <img src="http://placehold.it/140x140" alt="profile-image" class="img-rounded">
-                <label for="mp3">MP3</label>
+                <input type="hidden" name="user_id" value="{{ request.matchdict['id']}}"/>
                 <input id="mp3" name="mp3" type="file" value=""/>
                 <input name="photo.submitted" type="submit" value="submit"/>
             </form>
             {% for name in user.profile %}
+                <img src="http://localhost:1337{{name.img_path}}" alt="profile-image" class="img-responsive">
+                <label for="mp3">MP3</label>
                 <p>Username: {{ user.username }}</p>
                 <p>Email: {{ user.email }}</p>
                 <p>Age: {{ name.age }}</p>
