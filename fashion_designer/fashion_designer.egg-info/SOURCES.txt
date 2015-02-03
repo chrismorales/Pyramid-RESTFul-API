@@ -2,10 +2,15 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 development.ini
+fs_app.ini
 production.ini
 setup.py
 fashion_designer/__init__.py
+fashion_designer/ajax_function.py
+fashion_designer/api_router.py
+fashion_designer/email.py
 fashion_designer/models.py
+fashion_designer/security.py
 fashion_designer/tests.py
 fashion_designer/validators.py
 fashion_designer/views.py
@@ -29,4 +34,5 @@ fashion_designer/static/dist/css/bootstrap.min.css
 fashion_designer/static/dist/js/bootstrap.js
 fashion_designer/static/dist/js/bootstrap.min.js
 fashion_designer/static/dist/js/npm.js
-fashion_designer/templates/mytemplate.pt
+fashion_designer/static/images/apple_store.png
+fashion_designer/static/images/google_play.jpg

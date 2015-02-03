@@ -53,3 +53,9 @@ class TestMyViewFailureCondition(unittest.TestCase):
         request = testing.DummyRequest()
         info = my_view(request)
         self.assertEqual(info.status_int, 500)
+
+    def test_password_reset_page(self):
+        from .views import password_reset
+        request = testing.DummyRequest()
+        password_reset = password_reset(request)
+        self.assertEqual(password_reset.get('route'), "password_reset")

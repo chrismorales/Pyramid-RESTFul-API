@@ -87,6 +87,13 @@ def login(request):
         )
 
 
+@view_config(route_name='pass_reset', renderer='templates/password_reset.jinja2')
+def password_reset(request):
+    return dict(
+        route='password_reset'
+        )
+
+
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
