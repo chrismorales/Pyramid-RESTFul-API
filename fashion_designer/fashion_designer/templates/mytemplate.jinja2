@@ -41,7 +41,7 @@
       <div class="container">
         {% include "confirm_modal.jinja2" %}
         <div class="row">
-          <div class="col-md-2">
+          <div class="col-md-4">
             <img class="logo img-responsive" src="{{request.static_url('fashion_designer:static/pyramid.png')}}" alt="pyramid web framework">
           </div>
           <div class="col-md-6">
@@ -50,13 +50,15 @@
               <p class="lead">Welcome to <span class="font-normal">{{project}}</span>, an&nbsp;application generated&nbsp;by<br>the <span class="font-normal">Pyramid Web Framework 1.5.2</span>.</p>
             </div>
           </div>
+        </div>
+        <div class="row">
             {% if not request.authenticated_userid %}
                 <div class="col-md-4">
                     <a href="/signup">Sign Up</a>
+                    <a href="/login">Login</a>
                     {% block signup %}
                     {% endblock %}
 
-                    <a href="/login">Login</a>
                     {% block login %}
                     {% endblock %}
                 </div>
@@ -77,6 +79,7 @@
         </div>
         <div class="row" id="index">
             {% if not logged_in %}
+            <div class="col-md-4"></div>
             <div class="col-md-4">
                 {% include 'register.jinja2' %}
             </div>
