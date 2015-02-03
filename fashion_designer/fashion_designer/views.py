@@ -89,6 +89,11 @@ def login(request):
 
 @view_config(route_name='pass_reset', renderer='templates/password_reset.jinja2')
 def password_reset(request):
+    email = request.params['email']
+    reset_link = DBSession.query(Users).filter_by(email=email).first()
+    # call function to generate the password link
+    # Send email with reset link
+    # store the link in the database associated to the user
     return dict(
         route='password_reset'
         )
